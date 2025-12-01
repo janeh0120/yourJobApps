@@ -39,7 +39,31 @@
   <main>
   <div class="header-row">
     <h1><span id="countBadge" class="count-badge">0</span> Times I Hit Apply</h1>
-    <button id="openFormBtn" class="open-btn">Add Job App</button>
+    <div class="button-group-header">
+      <button id="importCsvBtn" class="open-btn import-btn">📥 Import CSV</button>
+      <button id="openFormBtn" class="open-btn">Add Job App</button>
+    </div>
+  </div>
+
+  <!-- Hidden file input for CSV import -->
+  <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+
+  <!-- CSV Import Modal -->
+  <div id="importModal" class="modal" aria-hidden="true">
+    <div class="modal-overlay" data-close></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+      <button class="modal-close" data-close aria-label="Close import dialog">×</button>
+      <h2 id="importModalTitle">Import CSV File</h2>
+      <div id="importContent">
+        <p>Select a CSV file with the following columns:</p>
+        <code class="csv-columns">Company, Job Title, Year, Email Questions, One-Sided Interview, Behavioural Interview, Portfolio Walkthrough, Take-home Challenge, Recruiter Call, Design Related, Referred, Applied On, Connection to Company, Tailored App, Private Posting, Status</code>
+        <div id="importPreview" style="margin-top: 20px;"></div>
+        <div class="import-actions" style="display: none;" id="importActions">
+          <button id="confirmImportBtn" class="save">Import Data</button>
+          <button id="cancelImportBtn" class="reset">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 
     <!-- Modal container -->

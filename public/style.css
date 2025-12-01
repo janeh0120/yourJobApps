@@ -172,6 +172,16 @@ h2{
     padding: .5rem 1rem;
 }
 
+.button-group-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.import-btn {
+    margin: 0;
+}
+
 .filter-form {
     display:flex;
     gap:0.5rem;
@@ -693,3 +703,64 @@ button[type="openFormBtn"]:hover {
     width: 100%;
 }
 
+/* CSV Import Styles */
+.csv-columns {
+    display: block;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+#importPreview {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#importPreview table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+#importPreview table th,
+#importPreview table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+#importPreview table th {
+    background: #e3e3e3;
+    font-weight: 600;
+}
+
+#importPreview table tr:nth-child(even) {
+    background: #fff;
+}
+
+#importPreview table tr:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+.import-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.import-actions button {
+    flex: 1;
+    padding: 0.75rem;
+}
+
+#importContent p {
+    margin: 0 0 0.5rem 0;
+}
