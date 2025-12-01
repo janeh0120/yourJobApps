@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width initial-scale=1"
+  />
+
+  <title>Collecting Data</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+  <link
+    href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="https://use.typekit.net/hju4rzt.css">
+
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
+
+</head>
+
+<body>
+
+  <main>
+  <div class="header-row">
+    <h1><span id="countBadge" class="count-badge">0</span> Times I Hit Apply</h1>
+    <button id="openFormBtn" class="open-btn">Add Job App</button>
+  </div>
+
+    <!-- Modal container -->
+    <div id="modal" class="modal" aria-hidden="true">
+      <div class="modal-overlay" data-close></div>
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" data-close aria-label="Close form">×</button>
+        <h2 id="modalTitle">Add a Job Application</h2>
+        <form id="myForm">
+      
+        <label for="jobTitle">Job Title*</label>
+        <input
+          required
+          type="text"
+          name="Job_Title"
+          id="jobTitle"
+          placeholder="e.g. Product Design Intern"
+          autocomplete="off"
+        />
+        <!-- <small class="validation">Job Title is required</small> -->
+      
+        <label for="company">Company*</label>
+        <input
+          required
+          type="text"
+          name="Company"
+          id="company"
+          placeholder="e.g. Acme Corp"
+          autocomplete="off"
+        />
+        <!-- <small class="validation">Company is required</small> -->
+      
+        <label for="company">Applied Using</label>
+        <input
+          
+          type="text"
+          name="Applied_On"
+          id="appliedOn"
+          placeholder="e.g. LinkedIn"
+          autocomplete="off"
+        />
+        <!-- <small class="validation">Applied using is required</small> -->
+      
+        <label for="company">Connection to Company</label>
+        <input
+          
+          type="text"
+          name="Connection_To_Company"
+          id="connectionToCompany"
+          placeholder="e.g. Employee Referral"
+          autocomplete="off"
+        />
+        <!-- <small class="validation">Connection to Company is required</small> -->
+    
+
+      <fieldset>
+        <legend>Other Filters</legend>
+        <label for="Design_Related">
+          <input
+            type="checkbox"
+            name="Design_Related"
+            id="Design_Related"
+          />
+          <span>Design-Related</span>
+        </label>
+   
+        <label for="Referred">
+          <input
+            type="checkbox"
+            name="Referred"
+            id="Referred"
+          />
+          <span>Referred</span>
+        </label>
+      
+        <label for="Tailored_App">
+          <input
+            type="checkbox"
+            name="Tailored_App"
+            id="Tailored_App"
+          />
+          <span>Tailored Application</span>
+        </label>
+
+        <label for="Private_Posting">
+          <input
+            type="checkbox"
+            name="Private_Posting"
+            id="Private_Posting"
+          />
+          <span>Private Posting</span>
+        </label>
+      </fieldset>
+
+      <div class="year-status-row">
+        <div class="status-section">
+          <legend>Status</legend>
+          <select name="Status" id="Status">
+            <option value="">Select status</option>
+            <option value="No Answer/Ongoing">No Answer/Ongoing</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Accepted">Accepted</option>
+          </select>
+        </div>
+
+        <div class="year-section">
+          <legend>Year Applied</legend>
+          <select name="Year" id="Year">
+            <option value="">Select year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+            <option value="5">5th Year</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Process</legend>
+        <label>
+          <input
+            type="checkbox"
+            id="Email_Questions"
+            name="Email_Questions"
+          />
+          <span>Email Questions</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            id="One_Sided_Interview"
+            name="One_Sided_Interview"
+          />
+          <span>One-Sided Interview</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            id="Behaviourial_Interview"
+            name="Behaviourial_Interview"
+          />
+          <span>Behavioural Interview</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            id="Portfolio_Walkthrough"
+            name="Portfolio_Walkthrough"
+          />
+          <span>Portfolio Walkthrough</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            id="Take_home_Challenge"
+            name="Take_home_Challenge"
+          />
+          <span>Design / Take-home Challenge</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            id="Recruiter_Call"
+            name="Recruiter_Call"
+          />
+          <span>Recruiter Call</span>
+        </label>
+      </fieldset>
+      
+      
+        <div class="button-group">
+          <button class="save" type="submit">Save</button>
+          <button class="reset" type="reset">Reset</button>
+        </div>
+     
+        </form>
+      </div>
+    </div>
+
+    <!-- Grid and filters layout -->
+    <div class="grid-layout">
+      <!-- Grid view container -->
+      <section id="gridContainer" class="grid-container">
+      </section>
+
+      <!-- Detail tooltip popup (hidden by default) -->
+      <div id="detailTooltip" class="detail-tooltip" style="display: none;">
+        <h3 id="detailTitle">Hover over a square</h3>
+        <div id="detailContent"></div>
+      </div>
+
+      <!-- Filters panel on the right -->
+      <aside class="filters-panel">
+        <p>Use filters below to explore trends in my job search</p>
+        <form id="filterForm" class="filter-form">
+          <div class="filter-group">
+            <label for="filterJobTitle">Job Title</label>
+            <input type="text" name="jobTitle" id="filterJobTitle" placeholder="ex. Product Designer" />
+          </div>
+          <div class="filter-group">
+            <label for="filterCompany">Company</label>
+            <input type="text" name="company" id="filterCompany" placeholder="ex. Google" />
+          </div>
+          <!-- <div class="filter-group">
+            <label for="filterConnection">Connection to Company</label>
+            <input type="text" name="connectionToCompany" id="filterConnection" placeholder="ex. LinkedIn" />
+          </div> -->
+          <!-- Status and Year side-by-side -->
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="filterStatus">Application Status</label>
+              <div class="custom-select-wrapper">
+                <button type="button" class="custom-select-button" id="statusButton">
+                  <span>Any status</span>
+                </button>
+                <div class="custom-select-menu" id="statusMenu">
+                  <div class="custom-option" data-value="">Any status</div>
+                  <div class="custom-option" data-value="No Answer/Ongoing">
+                    <img src="/assets/images/no_answer_ongoing.png" alt="No Answer/Ongoing" class="option-icon" />
+                    No Answer/Ongoing
+                  </div>
+                  <div class="custom-option" data-value="Rejected">
+                    <img src="/assets/images/rejected.png" alt="Rejected" class="option-icon" />
+                    Rejected
+                  </div>
+                  <div class="custom-option" data-value="Accepted">
+                    <img src="/assets/images/accepted.png" alt="Accepted" class="option-icon" />
+                    Accepted
+                  </div>
+                </div>
+                <input type="hidden" name="status" id="filterStatus" value="">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label for="filterYear">Year Applied</label>
+              <div class="custom-select-wrapper">
+                <button type="button" class="custom-select-button" id="yearButton">
+                  <span>Any year</span>
+                </button>
+                <div class="custom-select-menu" id="yearMenu">
+                  <div class="custom-option" data-value="">Any year</div>
+                  <div class="custom-option" data-value="1">
+                    <img src="/assets/images/Year1.png" alt="1st Year" class="option-icon" />
+                    1st Year
+                  </div>
+                  <div class="custom-option" data-value="2">
+                    <img src="/assets/images/Year2.png" alt="2nd Year" class="option-icon" />
+                    2nd Year
+                  </div>
+                  <div class="custom-option" data-value="3">
+                    <img src="/assets/images/Year3.png" alt="3rd Year" class="option-icon" />
+                    3rd Year
+                  </div>
+                  <div class="custom-option" data-value="4">
+                    <img src="/assets/images/Year4.png" alt="4th Year" class="option-icon" />
+                    4th Year
+                  </div>
+                  <div class="custom-option" data-value="5">
+                    <img src="/assets/images/Year5.png" alt="5th Year" class="option-icon" />
+                    5th Year
+                  </div>
+                </div>
+                <input type="hidden" name="year" id="filterYear" value="">
+              </div>
+            </div>
+          </div>
+          
+          <fieldset class="filter-fieldset">
+            <legend>Application Process</legend>
+            <div class="filter-process-group">
+              <label><input type="checkbox" class="filter-process" value="email" /> <img src="/assets/images/email_questions.png" alt="Email Questions" class="filter-icon" /> Email Questions</label>
+              <label><input type="checkbox" class="filter-process" value="one-sided" /> <img src="/assets/images/one-sided_interview.png" alt="One-sided Interview" class="filter-icon" /> One-sided Interview</label>
+              <label><input type="checkbox" class="filter-process" value="behavioural" /> <img src="/assets/images/behavioural_interview.png" alt="Behavioural Interview" class="filter-icon" /> Behavioural Interview</label>
+              <label><input type="checkbox" class="filter-process" value="portfolio" /> <img src="/assets/images/portfolio_walkthrough.png" alt="Portfolio Walkthrough" class="filter-icon" /> Portfolio Walkthrough</label>
+              <label><input type="checkbox" class="filter-process" value="design" /> <img src="/assets/images/take-home_challenge.png" alt="Take-home Challenge" class="filter-icon" /> Take-home Challenge</label>
+              <label><input type="checkbox" class="filter-process" value="recruiter" /> <img src="/assets/images/recruiter_call.png" alt="Recruiter Call" class="filter-icon" /> Recruiter Call</label>
+            </div>
+          </fieldset>
+          
+          <fieldset class="filter-fieldset">
+          <legend>Other Filters</legend>
+          <label><input type="checkbox" name="design" id="filterDesign" /> <img src="/assets/images/design-related.png" alt="Design Related" class="filter-icon" /> Design-related</label>
+          <label><input type="checkbox" name="referred" id="filterReferred" /> <img src="/assets/images/referred.png" alt="Referred" class="filter-icon" /> Referred</label>
+          <label><input type="checkbox" name="tailored" id="filterTailored" /> <img src="/assets/images/tailored_app.png" alt="Tailored App" class="filter-icon" /> Tailored App</label>
+          <label><input type="checkbox" class="filter-process" id="filterPrivate" value="private" /> <img src="/assets/images/private_posting.png" alt="Private Posting" class="filter-icon" /> Private Posting</label>
+          </fieldset>
+
+          <div class="buttons-container">
+          <button type="submit">Apply filters</button>
+          <button type="button" id="clearFilters">Clear</button>
+          </div>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <!-- <footer>
+    Created by <a href="https://nsitu.ca">Harold Sikkema</a> in the context of
+    Systems Design in the Interaction Design program at Sheridan College.
+  </footer> -->
+
+  <script
+    src="script.js"
+    type="module"
+  ></script>
+
+</body>
+
+</html>
