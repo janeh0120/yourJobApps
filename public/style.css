@@ -21,7 +21,10 @@ main {
 h1{
     text-transform: uppercase;
     font-size: 4rem;
-    font-weight: 600;
+    font-style: black;
+    font-family: "degular-display", Helvetica, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 900;
 }
 
 h2{

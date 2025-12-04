@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Data Visualization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Degular Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #121212;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            color: #f1f1f1;
+        }
+
+        /* Main container */
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Title */
+        .title {
+            font-family: "Degular Display", sans-serif;
+            font-size: 96px;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin-bottom: 64px;
+            letter-spacing: -2px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Content wrapper */
+        .content-wrapper {
+            display: flex;
+            gap: 64px;
+            align-items: flex-start;
+            justify-content: center;
+            animation: fadeIn 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Column */
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            width: 292px;
+        }
+
+        .column p {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.5;
+            color: #f1f1f1;
+        }
+
+        /* Divider */
+        .divider {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            color: #f1f1f1;
+            align-self: center;
+        }
+
+        /* Button group */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 8px 16px;
+            border: 2px solid #f1f1f1;
+            border-radius: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-white {
+            background: #f1f1f1;
+            color: #121212;
+            border-color: #f1f1f1;
+        }
+
+        .btn-white:hover {
+            background: #ffffff;
+            box-shadow: 0 8px 16px rgba(241, 241, 241, 0.3);
+        }
+
+        .btn-dark {
+            background: #121212;
+            color: #f1f1f1;
+            border-color: #f1f1f1;
+        }
+
+        .btn-dark:hover {
+            background: #1a1a1a;
+            box-shadow: 0 8px 16px rgba(241, 241, 241, 0.2);
+        }
+
+        /* Decorative elements positioned absolutely */
+        .decoration {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* Decorative patterns - positioned around the screen */
+        .deco-1 { top: 40px; left: 40px; }
+        .deco-2 { top: 80px; right: 60px; }
+        .deco-3 { bottom: 120px; left: 20px; }
+        .deco-4 { bottom: 80px; right: 40px; }
+        .deco-5 { top: 50%; right: 20px; }
+        .deco-6 { top: 10%; right: 10%; }
+        .deco-7 { bottom: 20%; left: 5%; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 48px;
+                margin-bottom: 40px;
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .divider {
+                display: none;
+            }
+
+            .column {
+                width: 100%;
+                max-width: 290px;
+            }
+        }
+
+        /* Center all content */
+        .center-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 64px;
+            max-width: 1280px;
+            position: relative;
+            z-index: 10;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative elements (background patterns) -->
+    <div class="decoration deco-1" id="deco1"></div>
+    <div class="decoration deco-2" id="deco2"></div>
+    <div class="decoration deco-3" id="deco3"></div>
+    <div class="decoration deco-4" id="deco4"></div>
+    <div class="decoration deco-5" id="deco5"></div>
+    <div class="decoration deco-6" id="deco6"></div>
+    <div class="decoration deco-7" id="deco7"></div>
+
+    <div class="main-container">
+        <div class="center-wrapper">
+            <!-- Title -->
+            <h1 class="title">Job Application<br>Data Visualization</h1>
+
+            <!-- Content -->
+            <div class="content-wrapper">
+                <!-- Left Column -->
+                <div class="column">
+                    <p>Create a database of your job applications to import it here.</p>
+                    <div class="button-group">
+                        <button class="btn btn-white" onclick="downloadTemplate()">Template</button>
+                        <button class="btn btn-dark" onclick="document.getElementById('csvInput').click()">Import My Data</button>
+                        <input type="file" id="csvInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider">OR</div>
+
+                <!-- Right Column -->
+                <div class="column">
+                    <p>If you are just starting your tracking, manually add your first applications.</p>
+                    <button class="btn btn-white" onclick="goToTracker()">Add an Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate random decorative elements
+        function generateDecorations() {
+            const colors = ['#A67C52', '#7CB342', '#42A5F5', '#AB47BC', '#66BB6A', '#EF5350', '#FFC107'];
+            const patterns = ['square', 'cross', 'checkerboard', 'stripes', 'dots'];
+
+            const decoElements = document.querySelectorAll('.decoration');
+            decoElements.forEach((el, index) => {
+                const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = 40 + Math.random() * 60;
+
+                createPattern(el, pattern, color, size);
+            });
+        }
+
+        function createPattern(element, pattern, color, size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            switch (pattern) {
+                case 'square':
+                    ctx.fillStyle = color;
+                    ctx.fillRect(0, 0, size, size);
+                    break;
+                case 'cross':
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(size / 2, 0);
+                    ctx.lineTo(size / 2, size);
+                    ctx.moveTo(0, size / 2);
+                    ctx.lineTo(size, size / 2);
+                    ctx.stroke();
+                    break;
+                case 'checkerboard':
+                    const squareSize = size / 4;
+                    for (let i = 0; i < 4; i++) {
+                        for (let j = 0; j < 4; j++) {
+                            if ((i + j) % 2 === 0) {
+                                ctx.fillStyle = color;
+                                ctx.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                            }
+                        }
+                    }
+                    break;
+                case 'stripes':
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 4;
+                    for (let i = 0; i < size; i += 10) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, size);
+                        ctx.stroke();
+                    }
+                    break;
+                case 'dots':
+                    ctx.fillStyle = color;
+                    for (let i = 0; i < 5; i++) {
+                        for (let j = 0; j < 5; j++) {
+                            ctx.beginPath();
+                            ctx.arc(i * (size / 4) + 5, j * (size / 4) + 5, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                    break;
+            }
+
+            element.appendChild(canvas);
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Store file and redirect to tracker
+                localStorage.setItem('pendingCSVFile', file.name);
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Download CSV template
+        function downloadTemplate() {
+            const template = `Company,Job Title,Year,Email Questions,One-Sided Interview,Behaviourial Interview,Portfolio Walkthrough,Take-home Challenge,Recruiter Call,Design Related,Referred,Applied On,Connection to Company,Tailored App,Private Posting,Status
+Example Company,Product Designer,1,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,LinkedIn,,TRUE,FALSE,No Answer/Ongoing`;
+
+            const blob = new Blob([template], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'job_applications_template.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        // Navigate to tracker
+        function goToTracker() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize decorations on page load
+        window.addEventListener('load', generateDecorations);
+    </script>
+</body>
+</html>
