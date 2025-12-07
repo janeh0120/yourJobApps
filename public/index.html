@@ -8,7 +8,7 @@
     content="width=device-width initial-scale=1"
   />
 
-  <title>Track your Applications!</title>
+  <title>Job Application Data Visualization</title>
 
   <link
     rel="preconnect"
@@ -25,23 +25,229 @@
   >
   <link rel="stylesheet" href="https://use.typekit.net/hju4rzt.css">
 
-
   <link
     rel="stylesheet"
     href="style.css"
   />
 
+  <style>
+    /* Landing page styles */
+    .landing-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #121212 url('./assets/images/bg.png') center/cover no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .landing-page.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Main container */
+    .landing-container {
+      position: absolute;
+      width: 1280px;
+      height: 832px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    /* Title */
+    .landing-title {
+      font-family: "Degular Display", sans-serif;
+      font-size: 96px;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: -2px;
+      color: #f1f1f1;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Content wrapper */
+    .landing-content {
+      display: flex;
+      gap: 64px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* Column */
+    .landing-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      width: 292px;
+    }
+
+    .landing-column p {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      text-align: center;
+      line-height: 1.5;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    /* Divider */
+    .landing-divider {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* Button group */
+    .landing-buttons {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Button styles */
+    .landing-btn {
+      padding: 8px 16px;
+      border: 1px solid #ffffff;
+      border-radius: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      white-space: nowrap;
+      height: auto;
+    }
+
+    .landing-btn:hover {
+      transform: scale(1.02);
+    }
+
+    .landing-btn-white {
+      background: #ffffff;
+      color: #121212;
+      border-color: #ffffff;
+    }
+
+    .landing-btn-white:hover {
+      background: #f1f1f1;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    .landing-btn-dark {
+      background: #121212;
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .landing-btn-dark:hover {
+      background: #1a1a1a;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+    }
+
+    @media (max-width: 1400px) {
+      .landing-container {
+        width: 100%;
+        height: 100%;
+        padding: 40px 20px;
+        transform: none;
+        left: 0;
+        top: 0;
+      }
+
+      .landing-title {
+        font-size: 64px;
+      }
+
+      .landing-content {
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .landing-container {
+        gap: 40px;
+      }
+
+      .landing-title {
+        font-size: 48px;
+      }
+
+      .landing-content {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .landing-divider {
+        display: none;
+      }
+
+      .landing-column {
+        width: 100%;
+      }
+
+      .landing-buttons {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 
 </head>
 
 <body>
 
-  <main>
+  <!-- Landing Page -->
+  <div id="landingPage" class="landing-page">
+    <div class="landing-container">
+      <h1 class="landing-title">Job Application<br>Data Visualization</h1>
+      <div class="landing-content">
+        <div class="landing-column">
+          <p>Create a database of your job applications to import it here.</p>
+          <div class="landing-buttons">
+            <button class="landing-btn landing-btn-white" onclick="downloadTemplate()">Template</button>
+            <button class="landing-btn landing-btn-dark" onclick="document.getElementById('csvFileInput').click()">Import My Data</button>
+          </div>
+        </div>
+        <div class="landing-divider">OR</div>
+        <div class="landing-column">
+          <p>If you are just starting your tracking, manually add your first applications.</p>
+          <button class="landing-btn landing-btn-white" onclick="goToTracker()">Add an Application</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="trackerApp" style="display: none;">
   <div class="header-row">
     <h1><span id="countBadge" class="count-badge">0</span> Times I Hit Apply</h1>
     <div class="button-group-header">
       <button id="importCsvBtn" class="open-btn import-btn">Import CSV</button>
       <button id="openFormBtn" class="open-btn">Add Job App</button>
+      <button id="backToLandingBtn" class="open-btn" onclick="goToLanding()" style="background: #999;">← Landing</button>
     </div>
   </div>
 

@@ -2,6 +2,45 @@
 import { parseCSV, saveApplications, loadApplications, addApplication, getApplicationCount, importApplications } from './localStorage-manager.js'
 
 // ============================================
+// LANDING PAGE TOGGLE
+// ============================================
+
+function goToTracker() {
+    const landingPage = document.getElementById('landingPage')
+    const trackerApp = document.getElementById('trackerApp')
+    
+    landingPage.classList.add('hidden')
+    setTimeout(() => {
+        trackerApp.style.display = 'flex'
+        renderGrid()
+        getCount()
+    }, 500)
+}
+
+function goToLanding() {
+    const landingPage = document.getElementById('landingPage')
+    const trackerApp = document.getElementById('trackerApp')
+    
+    trackerApp.style.display = 'none'
+    landingPage.classList.remove('hidden')
+}
+
+function downloadTemplate() {
+    const template = `Company,Job Title,Year,Email Questions,One-Sided Interview,Behaviourial Interview,Portfolio Walkthrough,Take-home Challenge,Recruiter Call,Design Related,Referred,Applied On,Connection to Company,Tailored App,Private Posting,Status
+Example Company,Product Designer,1,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,LinkedIn,,TRUE,FALSE,No Answer/Ongoing`
+
+    const blob = new Blob([template], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'job_applications_template.csv'
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+}
+
+// ============================================
 // DATA MANAGEMENT (LocalStorage-based)
 // ============================================
 
