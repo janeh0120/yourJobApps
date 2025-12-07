@@ -6,15 +6,8 @@ import { parseCSV, saveApplications, loadApplications, addApplication, getApplic
 // ============================================
 
 function goToTracker() {
-    const landingPage = document.getElementById('landingPage')
-    const trackerApp = document.getElementById('trackerApp')
-    
-    landingPage.classList.add('hidden')
-    setTimeout(() => {
-        trackerApp.style.display = 'flex'
-        renderGrid()
-        getCount()
-    }, 500)
+    // Navigate to data.html instead of showing tracker inline
+    window.location.href = './data.html'
 }
 
 function goToLanding() {
@@ -632,6 +625,9 @@ if (confirmImportBtn) {
             await getCount()
             closeImportModal()
             alert(`✅ Success!\n\nSuccessfully imported ${parsedImportData.length} job application${parsedImportData.length !== 1 ? 's' : ''}.`)
+            
+            // Navigate to data.html after successful import
+            setTimeout(() => window.location.href = './data.html', 500)
         } catch (err) {
             console.error('Failed to import:', err)
             let message = err.message || String(err)
