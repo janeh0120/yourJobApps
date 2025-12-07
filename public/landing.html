@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/hju4rzt.css">
     <style>
         * {
             margin: 0;
@@ -15,8 +16,9 @@
         }
 
         body {
-            font-family: "Degular Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            background: #121212;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #121212 url('./assets/images/bg.png') center/cover no-repeat;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -28,12 +30,17 @@
 
         /* Main container */
         .main-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
+            position: absolute;
+            width: 1280px;
+            height: 832px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
+            gap: 64px;
         }
 
         /* Title */
@@ -44,20 +51,10 @@
             text-align: center;
             text-transform: uppercase;
             line-height: 0.9;
-            margin-bottom: 64px;
             letter-spacing: -2px;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            color: #f1f1f1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Content wrapper */
@@ -66,16 +63,6 @@
             gap: 64px;
             align-items: flex-start;
             justify-content: center;
-            animation: fadeIn 0.8s ease-out 0.2s backwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
 
         /* Column */
@@ -92,7 +79,8 @@
             font-size: 16px;
             text-align: center;
             line-height: 1.5;
-            color: #f1f1f1;
+            color: #ffffff;
+            font-weight: 400;
         }
 
         /* Divider */
@@ -100,8 +88,9 @@
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 16px;
             text-align: center;
-            color: #f1f1f1;
-            align-self: center;
+            color: #ffffff;
+            font-weight: 400;
+            white-space: nowrap;
         }
 
         /* Button group */
@@ -115,65 +104,75 @@
         /* Button styles */
         .btn {
             padding: 8px 16px;
-            border: 2px solid #f1f1f1;
+            border: 1px solid #ffffff;
             border-radius: 0;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 400;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
             white-space: nowrap;
+            padding: 8px 16px;
+            height: auto;
         }
 
         .btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         .btn-white {
-            background: #f1f1f1;
+            background: #ffffff;
             color: #121212;
-            border-color: #f1f1f1;
+            border-color: #ffffff;
         }
 
         .btn-white:hover {
-            background: #ffffff;
-            box-shadow: 0 8px 16px rgba(241, 241, 241, 0.3);
+            background: #f1f1f1;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
         }
 
         .btn-dark {
             background: #121212;
-            color: #f1f1f1;
-            border-color: #f1f1f1;
+            color: #ffffff;
+            border-color: #ffffff;
         }
 
         .btn-dark:hover {
             background: #1a1a1a;
-            box-shadow: 0 8px 16px rgba(241, 241, 241, 0.2);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
         }
-
-        /* Decorative elements positioned absolutely */
-        .decoration {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        /* Decorative patterns - positioned around the screen */
-        .deco-1 { top: 40px; left: 40px; }
-        .deco-2 { top: 80px; right: 60px; }
-        .deco-3 { bottom: 120px; left: 20px; }
-        .deco-4 { bottom: 80px; right: 40px; }
-        .deco-5 { top: 50%; right: 20px; }
-        .deco-6 { top: 10%; right: 10%; }
-        .deco-7 { bottom: 20%; left: 5%; }
 
         /* Responsive */
+        @media (max-width: 1400px) {
+            .main-container {
+                width: 100%;
+                height: 100%;
+                padding: 40px 20px;
+                transform: none;
+                left: 0;
+                top: 0;
+            }
+
+            .title {
+                font-size: 64px;
+            }
+
+            .content-wrapper {
+                gap: 40px;
+                flex-wrap: wrap;
+            }
+        }
+
         @media (max-width: 768px) {
+            .main-container {
+                gap: 40px;
+            }
+
             .title {
                 font-size: 48px;
-                margin-bottom: 40px;
             }
 
             .content-wrapper {
@@ -187,135 +186,43 @@
 
             .column {
                 width: 100%;
-                max-width: 290px;
             }
-        }
 
-        /* Center all content */
-        .center-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 64px;
-            max-width: 1280px;
-            position: relative;
-            z-index: 10;
-            padding: 40px;
+            .button-group {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Decorative elements (background patterns) -->
-    <div class="decoration deco-1" id="deco1"></div>
-    <div class="decoration deco-2" id="deco2"></div>
-    <div class="decoration deco-3" id="deco3"></div>
-    <div class="decoration deco-4" id="deco4"></div>
-    <div class="decoration deco-5" id="deco5"></div>
-    <div class="decoration deco-6" id="deco6"></div>
-    <div class="decoration deco-7" id="deco7"></div>
-
     <div class="main-container">
-        <div class="center-wrapper">
-            <!-- Title -->
-            <h1 class="title">Job Application<br>Data Visualization</h1>
+        <!-- Title -->
+        <h1 class="title">Job Application<br>Data Visualization</h1>
 
-            <!-- Content -->
-            <div class="content-wrapper">
-                <!-- Left Column -->
-                <div class="column">
-                    <p>Create a database of your job applications to import it here.</p>
-                    <div class="button-group">
-                        <button class="btn btn-white" onclick="downloadTemplate()">Template</button>
-                        <button class="btn btn-dark" onclick="document.getElementById('csvInput').click()">Import My Data</button>
-                        <input type="file" id="csvInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
-                    </div>
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Left Column -->
+            <div class="column">
+                <p>Create a database of your job applications to import it here.</p>
+                <div class="button-group">
+                    <button class="btn btn-white" onclick="downloadTemplate()">Template</button>
+                    <button class="btn btn-dark" onclick="document.getElementById('csvInput').click()">Import My Data</button>
+                    <input type="file" id="csvInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
                 </div>
+            </div>
 
-                <!-- Divider -->
-                <div class="divider">OR</div>
+            <!-- Divider -->
+            <div class="divider">OR</div>
 
-                <!-- Right Column -->
-                <div class="column">
-                    <p>If you are just starting your tracking, manually add your first applications.</p>
-                    <button class="btn btn-white" onclick="goToTracker()">Add an Application</button>
-                </div>
+            <!-- Right Column -->
+            <div class="column">
+                <p>If you are just starting your tracking, manually add your first applications.</p>
+                <button class="btn btn-white" onclick="goToTracker()">Add an Application</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Generate random decorative elements
-        function generateDecorations() {
-            const colors = ['#A67C52', '#7CB342', '#42A5F5', '#AB47BC', '#66BB6A', '#EF5350', '#FFC107'];
-            const patterns = ['square', 'cross', 'checkerboard', 'stripes', 'dots'];
-
-            const decoElements = document.querySelectorAll('.decoration');
-            decoElements.forEach((el, index) => {
-                const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const size = 40 + Math.random() * 60;
-
-                createPattern(el, pattern, color, size);
-            });
-        }
-
-        function createPattern(element, pattern, color, size) {
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-
-            switch (pattern) {
-                case 'square':
-                    ctx.fillStyle = color;
-                    ctx.fillRect(0, 0, size, size);
-                    break;
-                case 'cross':
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 6;
-                    ctx.beginPath();
-                    ctx.moveTo(size / 2, 0);
-                    ctx.lineTo(size / 2, size);
-                    ctx.moveTo(0, size / 2);
-                    ctx.lineTo(size, size / 2);
-                    ctx.stroke();
-                    break;
-                case 'checkerboard':
-                    const squareSize = size / 4;
-                    for (let i = 0; i < 4; i++) {
-                        for (let j = 0; j < 4; j++) {
-                            if ((i + j) % 2 === 0) {
-                                ctx.fillStyle = color;
-                                ctx.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
-                            }
-                        }
-                    }
-                    break;
-                case 'stripes':
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 4;
-                    for (let i = 0; i < size; i += 10) {
-                        ctx.beginPath();
-                        ctx.moveTo(i, 0);
-                        ctx.lineTo(i, size);
-                        ctx.stroke();
-                    }
-                    break;
-                case 'dots':
-                    ctx.fillStyle = color;
-                    for (let i = 0; i < 5; i++) {
-                        for (let j = 0; j < 5; j++) {
-                            ctx.beginPath();
-                            ctx.arc(i * (size / 4) + 5, j * (size / 4) + 5, 3, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                    break;
-            }
-
-            element.appendChild(canvas);
-        }
-
         // Handle file upload
         function handleFileUpload(event) {
             const file = event.target.files[0];
@@ -346,9 +253,6 @@ Example Company,Product Designer,1,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE
         function goToTracker() {
             window.location.href = 'index.html';
         }
-
-        // Initialize decorations on page load
-        window.addEventListener('load', generateDecorations);
     </script>
 </body>
 </html>
