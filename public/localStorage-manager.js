@@ -11,11 +11,20 @@ const STORAGE_KEY = 'jobApplications'
  * @returns {Array<Object>} Array of parsed objects
  */
 export function parseCSV(csvText) {
+    if (!csvText || typeof csvText !== 'string') {
+        throw new Error('CSV_INVALID_FORMAT: File content is not text. Please ensure you uploaded a valid CSV file.')
+    }
+    
     const lines = csvText.trim().split('\n')
-    if (lines.length < 2) return []
+    if (lines.length < 2) {
+        throw new Error('CSV_EMPTY_FILE: CSV file is empty or contains only headers. Please add at least one data row.')
+    }
 
     // Parse header
     const header = parseCSVLine(lines[0])
+    if (header.length === 0 || !header[0]) {
+        throw new Error('CSV_NO_HEADERS: CSV file has no headers. First row should contain column names.')
+    }
     
     // Map header names to normalized field names
     const headerMap = {
@@ -39,33 +48,66 @@ export function parseCSV(csvText) {
 
     // Parse data rows
     const data = []
+    const errors = []
+    
     for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue
         
-        const values = parseCSVLine(lines[i])
-        const row = {}
-        
-        header.forEach((col, idx) => {
-            const normalizedCol = headerMap[col] || col
-            const value = values[idx] || ''
+        try {
+            const values = parseCSVLine(lines[i])
+            const row = {}
+            let hasRequiredData = false
             
-            // Convert boolean strings to actual booleans
-            if (['Email_Questions', 'One_Sided_Interview', 'Behaviourial_Interview', 
-                 'Portfolio_Walkthrough', 'Take_home_Challenge', 'Recruiter_Call',
-                 'Design_Related', 'Referred', 'Tailored_App', 'Private_Posting'].includes(normalizedCol)) {
-                row[normalizedCol] = value.toLowerCase() === 'true'
+            header.forEach((col, idx) => {
+                const normalizedCol = headerMap[col] || col
+                const value = values[idx] || ''
+                
+                // Track if row has any data
+                if (value.trim()) {
+                    hasRequiredData = true
+                }
+                
+                // Convert boolean strings to actual booleans
+                if (['Email_Questions', 'One_Sided_Interview', 'Behaviourial_Interview', 
+                     'Portfolio_Walkthrough', 'Take_home_Challenge', 'Recruiter_Call',
+                     'Design_Related', 'Referred', 'Tailored_App', 'Private_Posting'].includes(normalizedCol)) {
+                    const boolVal = value.toLowerCase().trim()
+                    if (boolVal && !['true', 'false', '1', '0', 'yes', 'no'].includes(boolVal)) {
+                        errors.push(`Row ${i + 1}: "${normalizedCol}" should be TRUE or FALSE, got "${value}"`)
+                    }
+                    row[normalizedCol] = boolVal === 'true' || boolVal === '1' || boolVal === 'yes'
+                }
+                // Convert Year to integer
+                else if (normalizedCol === 'Year') {
+                    if (value && isNaN(parseInt(value))) {
+                        errors.push(`Row ${i + 1}: "Year" should be a number, got "${value}"`)
+                    }
+                    row[normalizedCol] = value ? parseInt(value) : null
+                }
+                // Keep other fields as strings
+                else {
+                    row[normalizedCol] = value
+                }
+            })
+            
+            // Only add row if it has some data
+            if (hasRequiredData) {
+                data.push(row)
             }
-            // Convert Year to integer
-            else if (normalizedCol === 'Year') {
-                row[normalizedCol] = value ? parseInt(value) : null
-            }
-            // Keep other fields as strings
-            else {
-                row[normalizedCol] = value
-            }
-        })
-        
-        data.push(row)
+        } catch (err) {
+            errors.push(`Row ${i + 1}: Failed to parse - ${err.message}`)
+        }
+    }
+    
+    if (errors.length > 0) {
+        const errorCount = Math.min(3, errors.length)
+        const errorList = errors.slice(0, errorCount).join('\n')
+        const remaining = errors.length > 3 ? `\n...and ${errors.length - 3} more errors` : ''
+        throw new Error(`CSV_DATA_VALIDATION_FAILED: Found ${errors.length} formatting issues:\n\n${errorList}${remaining}`)
+    }
+    
+    if (data.length === 0) {
+        throw new Error('CSV_NO_DATA_ROWS: CSV file contains only headers. Please add at least one data row with job application information.')
     }
     
     return data
@@ -110,10 +152,16 @@ function parseCSVLine(line) {
  */
 export function saveApplications(applications) {
     try {
+        if (!applications || !Array.isArray(applications)) {
+            throw new Error('SAVE_INVALID_DATA: Data must be an array of applications.')
+        }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(applications))
         console.log(`Saved ${applications.length} applications to localStorage`)
     } catch (err) {
         console.error('Failed to save to localStorage:', err)
+        if (err.message.includes('SAVE_INVALID_DATA')) {
+            throw err
+        }
         throw new Error('Failed to save data to localStorage. Your storage may be full.')
     }
 }
@@ -167,6 +215,10 @@ export function getApplicationCount() {
  * @param {Array<Object>} applications - Parsed CSV data
  */
 export function importApplications(applications) {
+    if (!applications || !Array.isArray(applications) || applications.length === 0) {
+        throw new Error('IMPORT_NO_DATA: No valid applications to import. Please check your CSV file.')
+    }
+    
     // Add unique IDs if not present
     const withIds = applications.map((app, idx) => ({
         ...app,

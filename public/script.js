@@ -171,7 +171,7 @@ const renderGrid = async (params = {}) => {
         // Add layered images
         layers.forEach(layer => {
             const img = document.createElement('img')
-            img.src = `/assets/images/${layer.name}`
+            img.src = `./assets/images/${layer.name}`
             img.alt = layer.name.replace('.png', '').replace(/_/g, ' ')
             img.onerror = () => {
                 console.warn(`Failed to load image: ${layer.name}`)
@@ -489,6 +489,19 @@ if (csvFileInput) {
         if (!file) return
         
         try {
+            // Validate file type
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                throw new Error('CSV_WRONG_FILE_TYPE: Please select a .csv file. You selected a ' + file.name.split('.').pop() + ' file.')
+            }
+            
+            if (file.size === 0) {
+                throw new Error('CSV_EMPTY_FILE: The file is empty. Please select a CSV file with data.')
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                throw new Error('CSV_TOO_LARGE: File is too large (' + (file.size / 1024 / 1024).toFixed(1) + 'MB). Maximum size is 10MB.')
+            }
+            
             const csvText = await file.text()
             parsedImportData = parseCSV(csvText)
             
@@ -497,7 +510,7 @@ if (csvFileInput) {
             openImportModal()
         } catch (err) {
             console.error('Failed to parse CSV:', err)
-            alert('Failed to parse CSV file: ' + err.message)
+            displayCSVError(err)
         }
         
         // Reset file input so same file can be selected again
@@ -505,9 +518,36 @@ if (csvFileInput) {
     })
 }
 
+function displayCSVError(err) {
+    const message = err.message || String(err)
+    
+    let userMessage = ''
+    
+    if (message.includes('CSV_INVALID_FORMAT')) {
+        userMessage = '❌ Invalid File Format\n\nThe file you selected is not a valid text file. Please make sure you\'re uploading a CSV file.'
+    } else if (message.includes('CSV_EMPTY_FILE')) {
+        userMessage = '❌ Empty CSV File\n\nYour CSV file has no data rows. Please add at least one job application entry to your CSV.'
+    } else if (message.includes('CSV_NO_HEADERS')) {
+        userMessage = '❌ Missing Column Headers\n\nThe first row of your CSV must contain column headers. Make sure your CSV starts with: Company, Job Title, Year, Status, etc.'
+    } else if (message.includes('CSV_NO_DATA_ROWS')) {
+        userMessage = '❌ No Data Rows Found\n\nYour CSV file contains only headers. Please add at least one row with job application data.'
+    } else if (message.includes('CSV_DATA_VALIDATION_FAILED')) {
+        // Extract the error details
+        userMessage = '❌ Data Format Issues Found\n\n' + message.replace('CSV_DATA_VALIDATION_FAILED: ', '')
+    } else if (message.includes('CSV_WRONG_FILE_TYPE')) {
+        userMessage = '❌ Wrong File Type\n\nPlease select a CSV (.csv) file.'
+    } else if (message.includes('CSV_TOO_LARGE')) {
+        userMessage = '❌ File Too Large\n\n' + message.replace('CSV_TOO_LARGE: ', '')
+    } else {
+        userMessage = '❌ Import Error\n\n' + message
+    }
+    
+    alert(userMessage)
+}
+
 function showImportPreview(data) {
     if (!data || data.length === 0) {
-        importPreview.innerHTML = '<p style="color: red;">No valid data found in CSV</p>'
+        importPreview.innerHTML = '<p style="color: red;">❌ No valid data found in CSV. Check that your file has the correct column headers and at least one data row.</p>'
         return
     }
     
@@ -541,21 +581,31 @@ function showImportPreview(data) {
 
 // Confirm import button
 if (confirmImportBtn) {
-    confirmImportBtn.addEventListener('click', () => {
+    confirmImportBtn.addEventListener('click', async () => {
         if (!parsedImportData) {
-            alert('No data to import')
+            alert('❌ No data to import. Please select a CSV file first.')
             return
         }
         
         try {
             importApplications(parsedImportData)
-            renderGrid()
-            getCount()
+            await renderGrid()
+            await getCount()
             closeImportModal()
-            alert(`Successfully imported ${parsedImportData.length} job applications!`)
+            alert(`✅ Success!\n\nSuccessfully imported ${parsedImportData.length} job application${parsedImportData.length !== 1 ? 's' : ''}.`)
         } catch (err) {
             console.error('Failed to import:', err)
-            alert('Failed to import: ' + err.message)
+            let message = err.message || String(err)
+            
+            if (message.includes('SAVE_INVALID_DATA') || message.includes('IMPORT_NO_DATA')) {
+                alert('❌ Invalid Data\n\nThe data could not be saved. Please make sure your CSV contains valid data.')
+            } else if (message.includes('localStorage')) {
+                alert('❌ Storage Error\n\nYour browser storage is full. Please delete some entries or clear your browser data and try again.')
+            } else if (message.includes('null')) {
+                alert('❌ Data Error\n\nThere was an issue processing your data. Please check that your CSV file is properly formatted and try again.')
+            } else {
+                alert('❌ Import Failed\n\n' + message)
+            }
         }
     })
 }
