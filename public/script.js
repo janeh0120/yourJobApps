@@ -585,3 +585,13 @@ document.addEventListener('keydown', (e) => {
         closeImportModal()
     }
 })
+
+// Check if we should open the form modal on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('openFormOnLoad') === 'true') {
+        localStorage.removeItem('openFormOnLoad')
+        setTimeout(() => {
+            openModal()
+        }, 100)
+    }
+})
