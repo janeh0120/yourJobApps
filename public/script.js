@@ -135,11 +135,6 @@ const renderGrid = async (params = {}) => {
         // Build list of image layers with metadata about what they represent
         const layers = []
         
-        // Layer 1 (BACK): Offered status image - foundation
-        if (item.Status) {
-            const status = String(item.Status).toLowerCase()
-            if (status.includes('offered') || status.includes('accepted')) layers.push({ name: 'offered.png', relatedFilters: ['status'] })
-        }
         
         // Layer 2: Process type images (multiple possible)
         if (item.Email_Questions) layers.push({ name: 'email_questions.png', relatedFilters: ['process'] })
@@ -535,8 +530,16 @@ if (csvFileInput) {
             }
             
             const csvText = await file.text()
-            parsedImportData = parseCSV(csvText)
-            
+            try {
+                parsedImportData = parseCSV(csvText)
+            } catch (parseErr) {
+                console.error('CSV parse error:', parseErr)
+                displayCSVError(parseErr)
+                parsedImportData = null
+                return
+            }
+
+            console.log('CSV parsed successfully. rows=', Array.isArray(parsedImportData) ? parsedImportData.length : 0)
             // Show preview
             showImportPreview(parsedImportData)
             openImportModal()
@@ -574,7 +577,73 @@ function displayCSVError(err) {
         userMessage = '❌ Import Error\n\n' + message
     }
     
-    alert(userMessage)
+    // Show error in a modal so it is visible above the landing overlay
+    try {
+        showErrorModal(userMessage, 'Import Error')
+    } catch (e) {
+        // Fallback to alert if modal creation fails
+        alert(userMessage)
+    }
+}
+
+// Create and show a reusable error modal at runtime
+function showErrorModal(message, title = 'Error') {
+    // Build modal DOM using same classes/styles as other modals
+    const modal = document.createElement('div')
+    modal.className = 'modal open'
+    modal.setAttribute('aria-hidden', 'false')
+
+    const overlay = document.createElement('div')
+    overlay.className = 'modal-overlay'
+    overlay.setAttribute('data-close', '')
+
+    const content = document.createElement('div')
+    content.className = 'modal-content'
+    content.setAttribute('role', 'dialog')
+    content.setAttribute('aria-modal', 'true')
+
+    const closeBtn = document.createElement('button')
+    closeBtn.className = 'modal-close'
+    closeBtn.setAttribute('aria-label', 'Close')
+    closeBtn.textContent = '×'
+
+    const h = document.createElement('h2')
+    h.textContent = title
+
+    const body = document.createElement('div')
+    body.style.maxHeight = '60vh'
+    body.style.overflow = 'auto'
+    body.style.marginTop = '0.5rem'
+    body.innerHTML = `<p style="white-space: pre-wrap;">${escapeHtml(message)}</p>`
+
+    const actions = document.createElement('div')
+    actions.style.marginTop = '1rem'
+    const ok = document.createElement('button')
+    ok.className = 'save'
+    ok.textContent = 'Close'
+    actions.appendChild(ok)
+
+    content.appendChild(closeBtn)
+    content.appendChild(h)
+    content.appendChild(body)
+    content.appendChild(actions)
+
+    modal.appendChild(overlay)
+    modal.appendChild(content)
+
+    // Close handler
+    const removeModal = () => {
+        modal.remove()
+    }
+
+    overlay.addEventListener('click', removeModal)
+    closeBtn.addEventListener('click', removeModal)
+    ok.addEventListener('click', removeModal)
+
+    // Insert into DOM
+    document.body.appendChild(modal)
+    // Focus the close button for accessibility
+    ok.focus()
 }
 
 function showImportPreview(data) {
@@ -622,22 +691,27 @@ if (confirmImportBtn) {
         try {
             importApplications(parsedImportData)
             closeImportModal()
-            alert(`✅ Success!\n\nSuccessfully imported ${parsedImportData.length} job application${parsedImportData.length !== 1 ? 's' : ''}.`)
-            
-            // Navigate to data.html after successful import
-            setTimeout(() => window.location.href = './data.html', 500)
+            const importedCount = Array.isArray(parsedImportData) ? parsedImportData.length : 0
+            // Read back saved count from localStorage to be sure
+            const totalSaved = typeof getApplicationCount === 'function' ? getApplicationCount() : null
+            console.log('Import successful — importedCount=', importedCount, 'totalSaved=', totalSaved, 'parsedImportData=', parsedImportData)
+            alert(`Successfully imported ${totalSaved} job application(s).`)
+
+            // Ensure redirect reliably happens after alert — use await-friendly approach
+            await new Promise(resolve => setTimeout(resolve, 200))
+            window.location.assign('./data.html')
         } catch (err) {
             console.error('Failed to import:', err)
             let message = err.message || String(err)
             
             if (message.includes('SAVE_INVALID_DATA') || message.includes('IMPORT_NO_DATA')) {
-                alert('❌ Invalid Data\n\nThe data could not be saved. Please make sure your CSV contains valid data.')
+                showErrorModal('Invalid Data\n\nThe data could not be saved. Please make sure your CSV contains valid data.', 'Import Failed')
             } else if (message.includes('localStorage')) {
-                alert('❌ Storage Error\n\nYour browser storage is full. Please delete some entries or clear your browser data and try again.')
+                showErrorModal('Storage Error\n\nYour browser storage may be full. Please delete some entries or clear your browser data and try again.', 'Import Failed')
             } else if (message.includes('null')) {
-                alert('❌ Data Error\n\nThere was an issue processing your data. Please check that your CSV file is properly formatted and try again.')
+                showErrorModal('Data Error\n\nThere was an issue processing your data. Please check that your CSV file is properly formatted and try again.', 'Import Failed')
             } else {
-                alert('❌ Import Failed\n\n' + message)
+                showErrorModal('Import Failed\n\n' + message, 'Import Failed')
             }
         }
     })

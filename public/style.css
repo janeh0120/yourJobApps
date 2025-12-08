@@ -139,7 +139,8 @@ h2{
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    /* Ensure modal sits above the landing page which uses z-index: 9999 */
+    z-index: 10001;
 }
 .modal.open { display: block; }
 .modal-overlay {
