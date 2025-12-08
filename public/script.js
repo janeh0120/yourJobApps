@@ -621,8 +621,6 @@ if (confirmImportBtn) {
         
         try {
             importApplications(parsedImportData)
-            await renderGrid()
-            await getCount()
             closeImportModal()
             alert(`✅ Success!\n\nSuccessfully imported ${parsedImportData.length} job application${parsedImportData.length !== 1 ? 's' : ''}.`)
             
@@ -673,8 +671,15 @@ document.addEventListener('keydown', (e) => {
 
 // Check if we should open the form modal on page load
 document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('openFormOnLoad') === 'true') {
+    // Check if coming from landing page with openModal flag
+    const urlParams = new URLSearchParams(window.location.search)
+    const shouldOpenModal = urlParams.get('openModal') === 'true' || localStorage.getItem('openFormOnLoad') === 'true'
+    
+    if (shouldOpenModal) {
         localStorage.removeItem('openFormOnLoad')
+        // Clean up the URL parameter
+        window.history.replaceState({}, document.title, window.location.pathname)
+        
         setTimeout(() => {
             openModal()
         }, 100)
