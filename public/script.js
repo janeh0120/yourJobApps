@@ -577,73 +577,7 @@ function displayCSVError(err) {
         userMessage = '❌ Import Error\n\n' + message
     }
     
-    // Show error in a modal so it is visible above the landing overlay
-    try {
-        showErrorModal(userMessage, 'Import Error')
-    } catch (e) {
-        // Fallback to alert if modal creation fails
-        alert(userMessage)
-    }
-}
-
-// Create and show a reusable error modal at runtime
-function showErrorModal(message, title = 'Error') {
-    // Build modal DOM using same classes/styles as other modals
-    const modal = document.createElement('div')
-    modal.className = 'modal open'
-    modal.setAttribute('aria-hidden', 'false')
-
-    const overlay = document.createElement('div')
-    overlay.className = 'modal-overlay'
-    overlay.setAttribute('data-close', '')
-
-    const content = document.createElement('div')
-    content.className = 'modal-content'
-    content.setAttribute('role', 'dialog')
-    content.setAttribute('aria-modal', 'true')
-
-    const closeBtn = document.createElement('button')
-    closeBtn.className = 'modal-close'
-    closeBtn.setAttribute('aria-label', 'Close')
-    closeBtn.textContent = '×'
-
-    const h = document.createElement('h2')
-    h.textContent = title
-
-    const body = document.createElement('div')
-    body.style.maxHeight = '60vh'
-    body.style.overflow = 'auto'
-    body.style.marginTop = '0.5rem'
-    body.innerHTML = `<p style="white-space: pre-wrap;">${escapeHtml(message)}</p>`
-
-    const actions = document.createElement('div')
-    actions.style.marginTop = '1rem'
-    const ok = document.createElement('button')
-    ok.className = 'save'
-    ok.textContent = 'Close'
-    actions.appendChild(ok)
-
-    content.appendChild(closeBtn)
-    content.appendChild(h)
-    content.appendChild(body)
-    content.appendChild(actions)
-
-    modal.appendChild(overlay)
-    modal.appendChild(content)
-
-    // Close handler
-    const removeModal = () => {
-        modal.remove()
-    }
-
-    overlay.addEventListener('click', removeModal)
-    closeBtn.addEventListener('click', removeModal)
-    ok.addEventListener('click', removeModal)
-
-    // Insert into DOM
-    document.body.appendChild(modal)
-    // Focus the close button for accessibility
-    ok.focus()
+    alert(userMessage)
 }
 
 function showImportPreview(data) {
@@ -705,13 +639,13 @@ if (confirmImportBtn) {
             let message = err.message || String(err)
             
             if (message.includes('SAVE_INVALID_DATA') || message.includes('IMPORT_NO_DATA')) {
-                showErrorModal('Invalid Data\n\nThe data could not be saved. Please make sure your CSV contains valid data.', 'Import Failed')
+                alert('❌ Invalid Data\n\nThe data could not be saved. Please make sure your CSV contains valid data.')
             } else if (message.includes('localStorage')) {
-                showErrorModal('Storage Error\n\nYour browser storage may be full. Please delete some entries or clear your browser data and try again.', 'Import Failed')
+                alert('❌ Storage Error\n\nYour browser storage is full. Please delete some entries or clear your browser data and try again.')
             } else if (message.includes('null')) {
-                showErrorModal('Data Error\n\nThere was an issue processing your data. Please check that your CSV file is properly formatted and try again.', 'Import Failed')
+                alert('❌ Data Error\n\nThere was an issue processing your data. Please check that your CSV file is properly formatted and try again.')
             } else {
-                showErrorModal('Import Failed\n\n' + message, 'Import Failed')
+                alert('❌ Import Failed\n\n' + message)
             }
         }
     })
