@@ -19,7 +19,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 50;
     transition: opacity 0.5s ease;
 }
 
@@ -215,6 +215,25 @@ h2{
     text-transform: uppercase;
 }
 
+footer {
+    /* background-color: rgb(1, 1, 27); */
+    color: #fff;
+    padding: 1.5rem;
+    text-align: center;
+    /* border-top: 1px solid #333; */
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 50;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
 /* Header row with title and button */
 .header-row {
     display: flex;
@@ -323,8 +342,7 @@ h2{
     display: none;
     position: fixed;
     inset: 0;
-    /* Ensure modal sits above the landing page which uses z-index: 9999 */
-    z-index: 10001;
+    z-index: 100;
 }
 .modal.open { display: block; }
 .modal-overlay {
