@@ -1,47 +1,51 @@
 # Job Application Tracker
 
-A visual job search analytics tool that tracks and visualizes job applications using an interactive grid. Filter applications by status, year, process type, and more to discover patterns in my job search.
+A visual job search analytics tool that tracks and visualizes job applications using an interactive grid. Filter applications by status, year, process type, and more to discover patterns in my job search. Instead of relying on a backend database, data is now stored in the browser's **localStorage**, making it completely client-side.
 
-## Features
 
-- **Interactive Grid Visualization**: View all job applications as a grid of layered PNG images
-- **Advanced Filtering**: Filter by:
-  - Job title & company (text search)
-  - Application status (Accepted, Rejected, No Answer/Ongoing)
-  - Year applied (1st-5th year)
-  - Process types (Email Questions, Interviews, Take-home Challenges, etc.)
-  - Custom attributes (Design-Related, Referred, Tailored Application, Private Posting)
-- **Real-time Updates**: Add new applications via modal form with instant grid refresh
+## Usage
 
-## Tech Stack
+### First Time Using the App:
+1. Click the "📥 Import CSV" button
+2. Select your Jobs.csv file (or any CSV with the correct format)
+3. Review the preview
+4. Click "Import Data" to confirm
+5. Your data will be saved to localStorage
 
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Node.js + Express
-- **Database**: MongoDB Atlas + Prisma ORM
-- **Deployment**: Vercel
+### Adding New Applications:
+1. Click "Add Job App" button
+2. Fill in the form
+3. Click "Save"
+4. New entry will be saved to localStorage
 
-## Database Schema
+### Viewing & Filtering:
+- All entries are displayed as colored squares on the left
+- Use the filter panel on the right to filter by:
+  - Job Title
+  - Company
+  - Application Status (Accepted, Rejected, No Answer/Ongoing)
+  - Year Applied (1st-5th year)
+  - Application Process (Email, Interview types, Portfolio review, etc.)
+  - Other attributes (Design-related, Referred, Tailored App, Private Posting)
 
-The Prisma schema includes the following fields:
+## Data Persistence
 
-- **Metadata**: Job_Title, Company, Applied_On, Connection_to_Company
-- **Status**: Status (Accepted/Rejected/No Answer/Ongoing)
-- **Classification**: Design_Related, Referred, Tailored_App, Private_Posting
-- **Process**: Email_Questions, One_Sided_Interview, Behaviourial_Interview, Portfolio_Walkthrough, Take_home_Challenge, Recruiter_Call
-- **Timeline**: Year (1-5)
+✅ **Data survives:**
+- Browser restarts
+- Tab refreshes
+- Website revisits (same browser, same device)
 
-## File Structure
+❌ **Data is lost if:**
+- Browser cache/cookies are cleared
+- Private browsing session ends
+- Different browser/device is used
+- Browser storage is manually cleared
 
-```
-├── public/
-│   ├── index.html           # Main frontend
-│   ├── script.js            # Client-side logic
-│   ├── style.css            # Styling
-│   └── assets/images/       # Layered PNG images
-├── routes/
-│   └── api.js               # Express API endpoints
-├── prisma/
-│   └── schema.prisma        # Database schema
-├── server.js                # Express server
-├── package.json
-└── README.md
+## Limitations of localStorage
+
+| Aspect | Limitation |
+|--------|-----------|
+| **Storage Size** | ~5-10MB per domain |
+| **Device Specific** | Only accessible on the browser/device where imported |
+| **Shareability** | Can't easily share data between devices |
+| **Backup** | Manual export needed (can export as CSV and re-import) |
